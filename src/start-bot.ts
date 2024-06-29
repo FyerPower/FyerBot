@@ -1,36 +1,18 @@
 import { REST } from '@discordjs/rest';
-import { Options, Partials } from 'discord.js';
+import { GatewayIntentBits, Options, Partials } from 'discord.js';
 import { createRequire } from 'node:module';
 
 import { Button } from './buttons/index.js';
 import { DevCommand, HelpCommand, InfoCommand, TestCommand } from './commands/chat/index.js';
-import {
-    ChatCommandMetadata,
-    Command,
-    MessageCommandMetadata,
-    UserCommandMetadata,
-} from './commands/index.js';
+import { ChatCommandMetadata, Command, MessageCommandMetadata, UserCommandMetadata } from './commands/index.js';
 import { ViewDateSent } from './commands/message/index.js';
 import { ViewDateJoined } from './commands/user/index.js';
-import {
-    ButtonHandler,
-    CommandHandler,
-    GuildJoinHandler,
-    GuildLeaveHandler,
-    MessageHandler,
-    ReactionHandler,
-    TriggerHandler,
-} from './events/index.js';
+import { ButtonHandler, CommandHandler, GuildMemberAddHandler, MessageHandler, ReactionHandler, TriggerHandler } from './events/index.js';
 import { CustomClient } from './extensions/index.js';
-import { Job } from './jobs/index.js';
+import { Job, UpdateMemberRoleJob } from './jobs/index.js';
 import { Bot } from './models/bot.js';
 import { Reaction } from './reactions/index.js';
-import {
-    CommandRegistrationService,
-    EventDataService,
-    JobService,
-    Logger,
-} from './services/index.js';
+import { CommandRegistrationService, EventDataService, JobService, Logger } from './services/index.js';
 import { Trigger } from './triggers/index.js';
 
 const require = createRequire(import.meta.url);
@@ -43,8 +25,15 @@ async function start(): Promise<void> {
 
     // Client
     let client = new CustomClient({
-        intents: Config.client.intents,
-        partials: (Config.client.partials as string[]).map(partial => Partials[partial]),
+        intents: [
+            GatewayIntentBits.Guilds,
+            GatewayIntentBits.GuildMembers,
+            GatewayIntentBits.GuildMessages,
+            GatewayIntentBits.GuildMessageReactions,
+            GatewayIntentBits.DirectMessages,
+            GatewayIntentBits.DirectMessageReactions,
+        ],
+        partials: [Partials.Message, Partials.GuildMember, Partials.Channel, Partials.Reaction, Partials.User],
         makeCache: Options.cacheWithLimits({
             // Keep default caching behavior
             ...Options.DefaultMakeCacheSettings,
@@ -86,8 +75,7 @@ async function start(): Promise<void> {
     ];
 
     // Event handlers
-    let guildJoinHandler = new GuildJoinHandler(eventDataService);
-    let guildLeaveHandler = new GuildLeaveHandler();
+    let guildMemberAddHandler = new GuildMemberAddHandler();
     let commandHandler = new CommandHandler(commands, eventDataService);
     let buttonHandler = new ButtonHandler(buttons, eventDataService);
     let triggerHandler = new TriggerHandler(triggers, eventDataService);
@@ -96,21 +84,12 @@ async function start(): Promise<void> {
 
     // Jobs
     let jobs: Job[] = [
+        new UpdateMemberRoleJob(client),
         // TODO: Add new jobs here
     ];
 
     // Bot
-    let bot = new Bot(
-        Config.client.token,
-        client,
-        guildJoinHandler,
-        guildLeaveHandler,
-        messageHandler,
-        commandHandler,
-        buttonHandler,
-        reactionHandler,
-        new JobService(jobs)
-    );
+    let bot = new Bot(Config.client.token, client, messageHandler, commandHandler, buttonHandler, reactionHandler, guildMemberAddHandler, new JobService(jobs));
 
     // Register
     if (process.argv[2] == 'commands') {

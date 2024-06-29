@@ -1,4 +1,4 @@
-import { EmbedBuilder, Locale, LocalizationMap, resolveColor } from 'discord.js';
+import { EmbedBuilder, LocalizationMap, resolveColor } from 'discord.js';
 import { Linguini, TypeMapper, TypeMappers, Utils } from 'linguini';
 import path, { dirname } from 'node:path';
 import { fileURLToPath } from 'node:url';
@@ -6,48 +6,23 @@ import { fileURLToPath } from 'node:url';
 import { Language } from '../models/enum-helpers/index.js';
 
 export class Lang {
-    private static linguini = new Linguini(
-        path.resolve(dirname(fileURLToPath(import.meta.url)), '../../lang'),
-        'lang'
-    );
+    private static linguini = new Linguini(path.resolve(dirname(fileURLToPath(import.meta.url)), '../../lang'), 'lang');
 
-    public static getEmbed(
-        location: string,
-        langCode: Locale,
-        variables?: { [name: string]: string }
-    ): EmbedBuilder {
-        return (
-            this.linguini.get(location, langCode, this.embedTm, variables) ??
-            this.linguini.get(location, Language.Default, this.embedTm, variables)
-        );
+    public static getEmbed(location: string, variables?: { [name: string]: string }): EmbedBuilder {
+        return this.linguini.get(location, Language.Default, this.embedTm, variables);
     }
 
-    public static getRegex(location: string, langCode: Locale): RegExp {
-        return (
-            this.linguini.get(location, langCode, TypeMappers.RegExp) ??
-            this.linguini.get(location, Language.Default, TypeMappers.RegExp)
-        );
+    public static getRegex(location: string): RegExp {
+        return this.linguini.get(location, Language.Default, TypeMappers.RegExp);
     }
 
-    public static getRef(
-        location: string,
-        langCode: Locale,
-        variables?: { [name: string]: string }
-    ): string {
-        return (
-            this.linguini.getRef(location, langCode, variables) ??
-            this.linguini.getRef(location, Language.Default, variables)
-        );
+    public static getRef(location: string, variables?: { [name: string]: string }): string {
+        return this.linguini.getRef(location, Language.Default, variables);
     }
 
-    public static getRefLocalizationMap(
-        location: string,
-        variables?: { [name: string]: string }
-    ): LocalizationMap {
+    public static getRefLocalizationMap(location: string, variables?: { [name: string]: string }): LocalizationMap {
         let obj = {};
-        for (let langCode of Language.Enabled) {
-            obj[langCode] = this.getRef(location, langCode, variables);
-        }
+        obj[Language.Default] = this.getRef(location, variables);
         return obj;
     }
 

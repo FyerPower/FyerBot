@@ -1,9 +1,9 @@
-import { Locale, PermissionsString } from 'discord.js';
+import { PermissionsString } from 'discord.js';
 
 import { Lang } from '../../services/index.js';
 
 interface PermissionData {
-    displayName(langCode: Locale): string;
+    displayName(): string;
 }
 
 export class Permission {
@@ -11,233 +11,248 @@ export class Permission {
         [key in PermissionsString]: PermissionData;
     } = {
         AddReactions: {
-            displayName(langCode: Locale): string {
-                return Lang.getRef('permissions.AddReactions', langCode);
+            displayName(): string {
+                return Lang.getRef('permissions.AddReactions');
             },
         },
         Administrator: {
-            displayName(langCode: Locale): string {
-                return Lang.getRef('permissions.Administrator', langCode);
+            displayName(): string {
+                return Lang.getRef('permissions.Administrator');
             },
         },
         AttachFiles: {
-            displayName(langCode: Locale): string {
-                return Lang.getRef('permissions.AttachFiles', langCode);
+            displayName(): string {
+                return Lang.getRef('permissions.AttachFiles');
             },
         },
         BanMembers: {
-            displayName(langCode: Locale): string {
-                return Lang.getRef('permissions.BanMembers', langCode);
+            displayName(): string {
+                return Lang.getRef('permissions.BanMembers');
             },
         },
         ChangeNickname: {
-            displayName(langCode: Locale): string {
-                return Lang.getRef('permissions.ChangeNickname', langCode);
+            displayName(): string {
+                return Lang.getRef('permissions.ChangeNickname');
             },
         },
         Connect: {
-            displayName(langCode: Locale): string {
-                return Lang.getRef('permissions.Connect', langCode);
+            displayName(): string {
+                return Lang.getRef('permissions.Connect');
+            },
+        },
+        CreateEvents: {
+            displayName(): string {
+                return Lang.getRef('permissions.CreateEvents');
+            },
+        },
+        CreateGuildExpressions: {
+            displayName(): string {
+                return Lang.getRef('permissions.CreateGuildExpressions');
             },
         },
         CreateInstantInvite: {
-            displayName(langCode: Locale): string {
-                return Lang.getRef('permissions.CreateInstantInvite', langCode);
+            displayName(): string {
+                return Lang.getRef('permissions.CreateInstantInvite');
             },
         },
         CreatePrivateThreads: {
-            displayName(langCode: Locale): string {
-                return Lang.getRef('permissions.CreatePrivateThreads', langCode);
+            displayName(): string {
+                return Lang.getRef('permissions.CreatePrivateThreads');
             },
         },
         CreatePublicThreads: {
-            displayName(langCode: Locale): string {
-                return Lang.getRef('permissions.CreatePublicThreads', langCode);
+            displayName(): string {
+                return Lang.getRef('permissions.CreatePublicThreads');
             },
         },
         DeafenMembers: {
-            displayName(langCode: Locale): string {
-                return Lang.getRef('permissions.DeafenMembers', langCode);
+            displayName(): string {
+                return Lang.getRef('permissions.DeafenMembers');
             },
         },
         EmbedLinks: {
-            displayName(langCode: Locale): string {
-                return Lang.getRef('permissions.EmbedLinks', langCode);
+            displayName(): string {
+                return Lang.getRef('permissions.EmbedLinks');
             },
         },
         KickMembers: {
-            displayName(langCode: Locale): string {
-                return Lang.getRef('permissions.KickMembers', langCode);
+            displayName(): string {
+                return Lang.getRef('permissions.KickMembers');
             },
         },
         ManageChannels: {
-            displayName(langCode: Locale): string {
-                return Lang.getRef('permissions.ManageChannels', langCode);
+            displayName(): string {
+                return Lang.getRef('permissions.ManageChannels');
             },
         },
         ManageEmojisAndStickers: {
-            displayName(langCode: Locale): string {
-                return Lang.getRef('permissions.ManageEmojisAndStickers', langCode);
+            displayName(): string {
+                return Lang.getRef('permissions.ManageEmojisAndStickers');
             },
         },
         ManageEvents: {
-            displayName(langCode: Locale): string {
-                return Lang.getRef('permissions.ManageEvents', langCode);
+            displayName(): string {
+                return Lang.getRef('permissions.ManageEvents');
             },
         },
         ManageGuild: {
-            displayName(langCode: Locale): string {
-                return Lang.getRef('permissions.ManageGuild', langCode);
+            displayName(): string {
+                return Lang.getRef('permissions.ManageGuild');
             },
         },
         ManageGuildExpressions: {
-            displayName(langCode: Locale): string {
-                return Lang.getRef('permissions.ManageGuildExpressions', langCode);
+            displayName(): string {
+                return Lang.getRef('permissions.ManageGuildExpressions');
             },
         },
         ManageMessages: {
-            displayName(langCode: Locale): string {
-                return Lang.getRef('permissions.ManageMessages', langCode);
+            displayName(): string {
+                return Lang.getRef('permissions.ManageMessages');
             },
         },
         ManageNicknames: {
-            displayName(langCode: Locale): string {
-                return Lang.getRef('permissions.ManageNicknames', langCode);
+            displayName(): string {
+                return Lang.getRef('permissions.ManageNicknames');
             },
         },
         ManageRoles: {
-            displayName(langCode: Locale): string {
-                return Lang.getRef('permissions.ManageRoles', langCode);
+            displayName(): string {
+                return Lang.getRef('permissions.ManageRoles');
             },
         },
         ManageThreads: {
-            displayName(langCode: Locale): string {
-                return Lang.getRef('permissions.ManageThreads', langCode);
+            displayName(): string {
+                return Lang.getRef('permissions.ManageThreads');
             },
         },
         ManageWebhooks: {
-            displayName(langCode: Locale): string {
-                return Lang.getRef('permissions.ManageWebhooks', langCode);
+            displayName(): string {
+                return Lang.getRef('permissions.ManageWebhooks');
             },
         },
         MentionEveryone: {
-            displayName(langCode: Locale): string {
-                return Lang.getRef('permissions.MentionEveryone', langCode);
+            displayName(): string {
+                return Lang.getRef('permissions.MentionEveryone');
             },
         },
         ModerateMembers: {
-            displayName(langCode: Locale): string {
-                return Lang.getRef('permissions.ModerateMembers', langCode);
+            displayName(): string {
+                return Lang.getRef('permissions.ModerateMembers');
             },
         },
         MoveMembers: {
-            displayName(langCode: Locale): string {
-                return Lang.getRef('permissions.MoveMembers', langCode);
+            displayName(): string {
+                return Lang.getRef('permissions.MoveMembers');
             },
         },
         MuteMembers: {
-            displayName(langCode: Locale): string {
-                return Lang.getRef('permissions.MuteMembers', langCode);
+            displayName(): string {
+                return Lang.getRef('permissions.MuteMembers');
             },
         },
         PrioritySpeaker: {
-            displayName(langCode: Locale): string {
-                return Lang.getRef('permissions.PrioritySpeaker', langCode);
+            displayName(): string {
+                return Lang.getRef('permissions.PrioritySpeaker');
             },
         },
         ReadMessageHistory: {
-            displayName(langCode: Locale): string {
-                return Lang.getRef('permissions.ReadMessageHistory', langCode);
+            displayName(): string {
+                return Lang.getRef('permissions.ReadMessageHistory');
             },
         },
         RequestToSpeak: {
-            displayName(langCode: Locale): string {
-                return Lang.getRef('permissions.RequestToSpeak', langCode);
+            displayName(): string {
+                return Lang.getRef('permissions.RequestToSpeak');
             },
         },
         SendMessages: {
-            displayName(langCode: Locale): string {
-                return Lang.getRef('permissions.SendMessages', langCode);
+            displayName(): string {
+                return Lang.getRef('permissions.SendMessages');
             },
         },
         SendMessagesInThreads: {
-            displayName(langCode: Locale): string {
-                return Lang.getRef('permissions.SendMessagesInThreads', langCode);
+            displayName(): string {
+                return Lang.getRef('permissions.SendMessagesInThreads');
+            },
+        },
+        SendPolls: {
+            displayName(): string {
+                return Lang.getRef('permissions.SendPolls');
             },
         },
         SendTTSMessages: {
-            displayName(langCode: Locale): string {
-                return Lang.getRef('permissions.SendTTSMessages', langCode);
+            displayName(): string {
+                return Lang.getRef('permissions.SendTTSMessages');
             },
         },
         SendVoiceMessages: {
-            displayName(langCode: Locale): string {
-                return Lang.getRef('permissions.SendVoiceMessages', langCode);
+            displayName(): string {
+                return Lang.getRef('permissions.SendVoiceMessages');
             },
         },
         Speak: {
-            displayName(langCode: Locale): string {
-                return Lang.getRef('permissions.Speak', langCode);
+            displayName(): string {
+                return Lang.getRef('permissions.Speak');
             },
         },
         Stream: {
-            displayName(langCode: Locale): string {
-                return Lang.getRef('permissions.Stream', langCode);
+            displayName(): string {
+                return Lang.getRef('permissions.Stream');
             },
         },
         UseApplicationCommands: {
-            displayName(langCode: Locale): string {
-                return Lang.getRef('permissions.UseApplicationCommands', langCode);
+            displayName(): string {
+                return Lang.getRef('permissions.UseApplicationCommands');
             },
         },
         UseEmbeddedActivities: {
-            displayName(langCode: Locale): string {
-                return Lang.getRef('permissions.UseEmbeddedActivities', langCode);
+            displayName(): string {
+                return Lang.getRef('permissions.UseEmbeddedActivities');
             },
         },
         UseExternalEmojis: {
-            displayName(langCode: Locale): string {
-                return Lang.getRef('permissions.UseExternalEmojis', langCode);
+            displayName(): string {
+                return Lang.getRef('permissions.UseExternalEmojis');
             },
         },
         UseExternalSounds: {
-            displayName(langCode: Locale): string {
-                return Lang.getRef('permissions.UseExternalSounds', langCode);
+            displayName(): string {
+                return Lang.getRef('permissions.UseExternalSounds');
             },
         },
         UseExternalStickers: {
-            displayName(langCode: Locale): string {
-                return Lang.getRef('permissions.UseExternalStickers', langCode);
+            displayName(): string {
+                return Lang.getRef('permissions.UseExternalStickers');
             },
         },
         UseSoundboard: {
-            displayName(langCode: Locale): string {
-                return Lang.getRef('permissions.UseSoundboard', langCode);
+            displayName(): string {
+                return Lang.getRef('permissions.UseSoundboard');
             },
         },
         UseVAD: {
-            displayName(langCode: Locale): string {
-                return Lang.getRef('permissions.UseVAD', langCode);
+            displayName(): string {
+                return Lang.getRef('permissions.UseVAD');
             },
         },
         ViewAuditLog: {
-            displayName(langCode: Locale): string {
-                return Lang.getRef('permissions.ViewAuditLog', langCode);
+            displayName(): string {
+                return Lang.getRef('permissions.ViewAuditLog');
             },
         },
         ViewChannel: {
-            displayName(langCode: Locale): string {
-                return Lang.getRef('permissions.ViewChannel', langCode);
+            displayName(): string {
+                return Lang.getRef('permissions.ViewChannel');
             },
         },
         ViewCreatorMonetizationAnalytics: {
-            displayName(langCode: Locale): string {
-                return Lang.getRef('permissions.ViewCreatorMonetizationAnalytics', langCode);
+            displayName(): string {
+                return Lang.getRef('permissions.ViewCreatorMonetizationAnalytics');
             },
         },
         ViewGuildInsights: {
-            displayName(langCode: Locale): string {
-                return Lang.getRef('permissions.ViewGuildInsights', langCode);
+            displayName(): string {
+                return Lang.getRef('permissions.ViewGuildInsights');
             },
         },
     };

@@ -1,13 +1,6 @@
-import {
-    DiscordAPIError,
-    RESTJSONErrorCodes as DiscordApiErrors,
-    Message,
-    MessageReaction,
-    PartialMessage,
-    PartialMessageReaction,
-    PartialUser,
-    User,
-} from 'discord.js';
+import { DiscordAPIError, RESTJSONErrorCodes as DiscordApiErrors, Message, MessageReaction, PartialMessage, PartialMessageReaction, PartialUser, User } from 'discord.js';
+
+import { Logger } from '../services/logger.js';
 
 const IGNORED_ERRORS = [
     DiscordApiErrors.UnknownMessage,
@@ -24,11 +17,7 @@ export class PartialUtils {
             try {
                 return await user.fetch();
             } catch (error) {
-                if (
-                    error instanceof DiscordAPIError &&
-                    typeof error.code == 'number' &&
-                    IGNORED_ERRORS.includes(error.code)
-                ) {
+                if (error instanceof DiscordAPIError && typeof error.code == 'number' && IGNORED_ERRORS.includes(error.code)) {
                     return;
                 } else {
                     throw error;
@@ -44,11 +33,8 @@ export class PartialUtils {
             try {
                 return await msg.fetch();
             } catch (error) {
-                if (
-                    error instanceof DiscordAPIError &&
-                    typeof error.code == 'number' &&
-                    IGNORED_ERRORS.includes(error.code)
-                ) {
+                Logger.error('Error');
+                if (error instanceof DiscordAPIError && typeof error.code == 'number' && IGNORED_ERRORS.includes(error.code)) {
                     return;
                 } else {
                     throw error;
@@ -59,18 +45,12 @@ export class PartialUtils {
         return msg as Message;
     }
 
-    public static async fillReaction(
-        msgReaction: MessageReaction | PartialMessageReaction
-    ): Promise<MessageReaction> {
+    public static async fillReaction(msgReaction: MessageReaction | PartialMessageReaction): Promise<MessageReaction> {
         if (msgReaction.partial) {
             try {
                 msgReaction = await msgReaction.fetch();
             } catch (error) {
-                if (
-                    error instanceof DiscordAPIError &&
-                    typeof error.code == 'number' &&
-                    IGNORED_ERRORS.includes(error.code)
-                ) {
+                if (error instanceof DiscordAPIError && typeof error.code == 'number' && IGNORED_ERRORS.includes(error.code)) {
                     return;
                 } else {
                     throw error;

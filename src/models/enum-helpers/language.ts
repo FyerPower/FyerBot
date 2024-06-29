@@ -21,6 +21,7 @@ export class Language {
         'en-GB': { englishName: 'English, UK', nativeName: 'English, UK' },
         'en-US': { englishName: 'English, US', nativeName: 'English, US' },
         'es-ES': { englishName: 'Spanish', nativeName: 'Español' },
+        'es-419': { englishName: 'Spanish', nativeName: 'Español' },
         fi: { englishName: 'Finnish', nativeName: 'Suomi' },
         fr: { englishName: 'French', nativeName: 'Français' },
         hi: { englishName: 'Hindi', nativeName: 'हिन्दी' },
@@ -50,61 +51,23 @@ export class Language {
         return this.findMultiple(input, enabled, 1)[0];
     }
 
-    public static findMultiple(
-        input: string,
-        enabled: boolean,
-        limit: number = Number.MAX_VALUE
-    ): Locale[] {
+    public static findMultiple(input: string, enabled: boolean, limit: number = Number.MAX_VALUE): Locale[] {
         let langCodes = enabled ? this.Enabled : Object.values(Locale).sort();
         let search = input.toLowerCase();
         let found = new Set<Locale>();
         // Exact match
-        if (found.size < limit)
-            langCodes
-                .filter(langCode => langCode.toLowerCase() === search)
-                .forEach(langCode => found.add(langCode));
-        if (found.size < limit)
-            langCodes
-                .filter(langCode => this.Data[langCode].nativeName.toLowerCase() === search)
-                .forEach(langCode => found.add(langCode));
-        if (found.size < limit)
-            langCodes
-                .filter(langCode => this.Data[langCode].nativeName.toLowerCase() === search)
-                .forEach(langCode => found.add(langCode));
-        if (found.size < limit)
-            langCodes
-                .filter(langCode => this.Data[langCode].englishName.toLowerCase() === search)
-                .forEach(langCode => found.add(langCode));
+        if (found.size < limit) langCodes.filter(langCode => langCode.toLowerCase() === search).forEach(langCode => found.add(langCode));
+        if (found.size < limit) langCodes.filter(langCode => this.Data[langCode].nativeName.toLowerCase() === search).forEach(langCode => found.add(langCode));
+        if (found.size < limit) langCodes.filter(langCode => this.Data[langCode].nativeName.toLowerCase() === search).forEach(langCode => found.add(langCode));
+        if (found.size < limit) langCodes.filter(langCode => this.Data[langCode].englishName.toLowerCase() === search).forEach(langCode => found.add(langCode));
         // Starts with search term
-        if (found.size < limit)
-            langCodes
-                .filter(langCode => langCode.toLowerCase().startsWith(search))
-                .forEach(langCode => found.add(langCode));
-        if (found.size < limit)
-            langCodes
-                .filter(langCode => this.Data[langCode].nativeName.toLowerCase().startsWith(search))
-                .forEach(langCode => found.add(langCode));
-        if (found.size < limit)
-            langCodes
-                .filter(langCode =>
-                    this.Data[langCode].englishName.toLowerCase().startsWith(search)
-                )
-                .forEach(langCode => found.add(langCode));
+        if (found.size < limit) langCodes.filter(langCode => langCode.toLowerCase().startsWith(search)).forEach(langCode => found.add(langCode));
+        if (found.size < limit) langCodes.filter(langCode => this.Data[langCode].nativeName.toLowerCase().startsWith(search)).forEach(langCode => found.add(langCode));
+        if (found.size < limit) langCodes.filter(langCode => this.Data[langCode].englishName.toLowerCase().startsWith(search)).forEach(langCode => found.add(langCode));
         // Includes search term
-        if (found.size < limit)
-            langCodes
-                .filter(langCode => langCode.toLowerCase().startsWith(search))
-                .forEach(langCode => found.add(langCode));
-        if (found.size < limit)
-            langCodes
-                .filter(langCode => this.Data[langCode].nativeName.toLowerCase().startsWith(search))
-                .forEach(langCode => found.add(langCode));
-        if (found.size < limit)
-            langCodes
-                .filter(langCode =>
-                    this.Data[langCode].englishName.toLowerCase().startsWith(search)
-                )
-                .forEach(langCode => found.add(langCode));
+        if (found.size < limit) langCodes.filter(langCode => langCode.toLowerCase().startsWith(search)).forEach(langCode => found.add(langCode));
+        if (found.size < limit) langCodes.filter(langCode => this.Data[langCode].nativeName.toLowerCase().startsWith(search)).forEach(langCode => found.add(langCode));
+        if (found.size < limit) langCodes.filter(langCode => this.Data[langCode].englishName.toLowerCase().startsWith(search)).forEach(langCode => found.add(langCode));
         return [...found];
     }
 }

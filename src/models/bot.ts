@@ -4,7 +4,7 @@ import {
     Client,
     CommandInteraction,
     Events,
-    Guild,
+    GuildMember,
     Interaction,
     Message,
     MessageReaction,
@@ -16,20 +16,12 @@ import {
 } from 'discord.js';
 import { createRequire } from 'node:module';
 
-import {
-    ButtonHandler,
-    CommandHandler,
-    GuildJoinHandler,
-    GuildLeaveHandler,
-    MessageHandler,
-    ReactionHandler,
-} from '../events/index.js';
+import { ButtonHandler, CommandHandler, GuildMemberAddHandler, MessageHandler, ReactionHandler } from '../events/index.js';
 import { JobService, Logger } from '../services/index.js';
 import { PartialUtils } from '../utils/index.js';
 
 const require = createRequire(import.meta.url);
 let Config = require('../../config/config.json');
-let Debug = require('../../config/debug.json');
 let Logs = require('../../lang/logs.json');
 
 export class Bot {
@@ -38,12 +30,11 @@ export class Bot {
     constructor(
         private token: string,
         private client: Client,
-        private guildJoinHandler: GuildJoinHandler,
-        private guildLeaveHandler: GuildLeaveHandler,
         private messageHandler: MessageHandler,
         private commandHandler: CommandHandler,
         private buttonHandler: ButtonHandler,
         private reactionHandler: ReactionHandler,
+        private guildMemberAddHandler: GuildMemberAddHandler,
         private jobService: JobService
     ) {}
 
@@ -54,21 +45,12 @@ export class Bot {
 
     private registerListeners(): void {
         this.client.on(Events.ClientReady, () => this.onReady());
-        this.client.on(Events.ShardReady, (shardId: number, unavailableGuilds: Set<string>) =>
-            this.onShardReady(shardId, unavailableGuilds)
-        );
-        this.client.on(Events.GuildCreate, (guild: Guild) => this.onGuildJoin(guild));
-        this.client.on(Events.GuildDelete, (guild: Guild) => this.onGuildLeave(guild));
+        this.client.on(Events.ShardReady, (shardId: number, unavailableGuilds: Set<string>) => this.onShardReady(shardId, unavailableGuilds));
         this.client.on(Events.MessageCreate, (msg: Message) => this.onMessage(msg));
         this.client.on(Events.InteractionCreate, (intr: Interaction) => this.onInteraction(intr));
-        this.client.on(
-            Events.MessageReactionAdd,
-            (messageReaction: MessageReaction | PartialMessageReaction, user: User | PartialUser) =>
-                this.onReaction(messageReaction, user)
-        );
-        this.client.rest.on(RESTEvents.RateLimited, (rateLimitData: RateLimitData) =>
-            this.onRateLimit(rateLimitData)
-        );
+        this.client.on(Events.MessageReactionAdd, (messageReaction: MessageReaction | PartialMessageReaction, user: User | PartialUser) => this.onReaction(messageReaction, user));
+        this.client.on(Events.GuildMemberAdd, (member: GuildMember) => this.onGuildMemberAdd(member));
+        this.client.rest.on(RESTEvents.RateLimited, (rateLimitData: RateLimitData) => this.onRateLimit(rateLimitData));
     }
 
     private async login(token: string): Promise<void> {
@@ -80,13 +62,16 @@ export class Bot {
         }
     }
 
+    private async onGuildMemberAdd(member: GuildMember): Promise<void> {
+        Logger.info('Member Joined....');
+        this.guildMemberAddHandler.process(member);
+    }
+
     private async onReady(): Promise<void> {
         let userTag = this.client.user?.tag;
         Logger.info(Logs.info.clientLogin.replaceAll('{USER_TAG}', userTag));
 
-        if (!Debug.dummyMode.enabled) {
-            this.jobService.start();
-        }
+        this.jobService.start();
 
         this.ready = true;
         Logger.info(Logs.info.clientReady);
@@ -96,35 +81,8 @@ export class Bot {
         Logger.setShardId(shardId);
     }
 
-    private async onGuildJoin(guild: Guild): Promise<void> {
-        if (!this.ready || Debug.dummyMode.enabled) {
-            return;
-        }
-
-        try {
-            await this.guildJoinHandler.process(guild);
-        } catch (error) {
-            Logger.error(Logs.error.guildJoin, error);
-        }
-    }
-
-    private async onGuildLeave(guild: Guild): Promise<void> {
-        if (!this.ready || Debug.dummyMode.enabled) {
-            return;
-        }
-
-        try {
-            await this.guildLeaveHandler.process(guild);
-        } catch (error) {
-            Logger.error(Logs.error.guildLeave, error);
-        }
-    }
-
     private async onMessage(msg: Message): Promise<void> {
-        if (
-            !this.ready ||
-            (Debug.dummyMode.enabled && !Debug.dummyMode.whitelist.includes(msg.author.id))
-        ) {
+        if (!this.ready) {
             return;
         }
 
@@ -133,6 +91,7 @@ export class Bot {
             if (!msg) {
                 return;
             }
+            Logger.info(`Message Recieved >> ${JSON.stringify(msg.toJSON())}`);
 
             await this.messageHandler.process(msg);
         } catch (error) {
@@ -141,10 +100,7 @@ export class Bot {
     }
 
     private async onInteraction(intr: Interaction): Promise<void> {
-        if (
-            !this.ready ||
-            (Debug.dummyMode.enabled && !Debug.dummyMode.whitelist.includes(intr.user.id))
-        ) {
+        if (!this.ready) {
             return;
         }
 
@@ -163,14 +119,8 @@ export class Bot {
         }
     }
 
-    private async onReaction(
-        msgReaction: MessageReaction | PartialMessageReaction,
-        reactor: User | PartialUser
-    ): Promise<void> {
-        if (
-            !this.ready ||
-            (Debug.dummyMode.enabled && !Debug.dummyMode.whitelist.includes(reactor.id))
-        ) {
+    private async onReaction(msgReaction: MessageReaction | PartialMessageReaction, reactor: User | PartialUser): Promise<void> {
+        if (!this.ready) {
             return;
         }
 
@@ -185,11 +135,7 @@ export class Bot {
                 return;
             }
 
-            await this.reactionHandler.process(
-                msgReaction,
-                msgReaction.message as Message,
-                reactor
-            );
+            await this.reactionHandler.process(msgReaction, msgReaction.message as Message, reactor);
         } catch (error) {
             Logger.error(Logs.error.reaction, error);
         }

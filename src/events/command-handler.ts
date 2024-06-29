@@ -1,18 +1,10 @@
-import {
-    AutocompleteInteraction,
-    ChatInputCommandInteraction,
-    CommandInteraction,
-    NewsChannel,
-    TextChannel,
-    ThreadChannel,
-} from 'discord.js';
+import { AutocompleteInteraction, ChatInputCommandInteraction, CommandInteraction, NewsChannel, TextChannel, ThreadChannel } from 'discord.js';
 import { RateLimiter } from 'discord.js-rate-limiter';
 import { createRequire } from 'node:module';
 
 import { EventHandler } from './index.js';
 import { Command, CommandDeferType } from '../commands/index.js';
 import { DiscordLimits } from '../constants/index.js';
-import { EventData } from '../models/internal-models.js';
 import { EventDataService, Lang, Logger } from '../services/index.js';
 import { CommandUtils, InteractionUtils } from '../utils/index.js';
 
@@ -21,10 +13,7 @@ let Config = require('../../config/config.json');
 let Logs = require('../../lang/logs.json');
 
 export class CommandHandler implements EventHandler {
-    private rateLimiter = new RateLimiter(
-        Config.rateLimiting.commands.amount,
-        Config.rateLimiting.commands.interval * 1000
-    );
+    private rateLimiter = new RateLimiter(Config.rateLimiting.commands.amount, Config.rateLimiting.commands.interval * 1000);
 
     constructor(
         public commands: Command[],
@@ -39,47 +28,30 @@ export class CommandHandler implements EventHandler {
 
         let commandParts =
             intr instanceof ChatInputCommandInteraction || intr instanceof AutocompleteInteraction
-                ? [
-                      intr.commandName,
-                      intr.options.getSubcommandGroup(false),
-                      intr.options.getSubcommand(false),
-                  ].filter(Boolean)
+                ? [intr.commandName, intr.options.getSubcommandGroup(false), intr.options.getSubcommand(false)].filter(Boolean)
                 : [intr.commandName];
         let commandName = commandParts.join(' ');
 
         // Try to find the command the user wants
         let command = CommandUtils.findCommand(this.commands, commandParts);
         if (!command) {
-            Logger.error(
-                Logs.error.commandNotFound
-                    .replaceAll('{INTERACTION_ID}', intr.id)
-                    .replaceAll('{COMMAND_NAME}', commandName)
-            );
+            Logger.error(Logs.error.commandNotFound.replaceAll('{INTERACTION_ID}', intr.id).replaceAll('{COMMAND_NAME}', commandName));
             return;
         }
 
         if (intr instanceof AutocompleteInteraction) {
             if (!command.autocomplete) {
-                Logger.error(
-                    Logs.error.autocompleteNotFound
-                        .replaceAll('{INTERACTION_ID}', intr.id)
-                        .replaceAll('{COMMAND_NAME}', commandName)
-                );
+                Logger.error(Logs.error.autocompleteNotFound.replaceAll('{INTERACTION_ID}', intr.id).replaceAll('{COMMAND_NAME}', commandName));
                 return;
             }
 
             try {
                 let option = intr.options.getFocused(true);
                 let choices = await command.autocomplete(intr, option);
-                await InteractionUtils.respond(
-                    intr,
-                    choices?.slice(0, DiscordLimits.CHOICES_PER_AUTOCOMPLETE)
-                );
+                await InteractionUtils.respond(intr, choices?.slice(0, DiscordLimits.CHOICES_PER_AUTOCOMPLETE));
             } catch (error) {
                 Logger.error(
-                    intr.channel instanceof TextChannel ||
-                        intr.channel instanceof NewsChannel ||
-                        intr.channel instanceof ThreadChannel
+                    intr.channel instanceof TextChannel || intr.channel instanceof NewsChannel || intr.channel instanceof ThreadChannel
                         ? Logs.error.autocompleteGuild
                               .replaceAll('{INTERACTION_ID}', intr.id)
                               .replaceAll('{OPTION_NAME}', commandName)
@@ -142,13 +114,11 @@ export class CommandHandler implements EventHandler {
                 await command.execute(intr, data);
             }
         } catch (error) {
-            await this.sendError(intr, data);
+            await this.sendError(intr);
 
             // Log command error
             Logger.error(
-                intr.channel instanceof TextChannel ||
-                    intr.channel instanceof NewsChannel ||
-                    intr.channel instanceof ThreadChannel
+                intr.channel instanceof TextChannel || intr.channel instanceof NewsChannel || intr.channel instanceof ThreadChannel
                     ? Logs.error.commandGuild
                           .replaceAll('{INTERACTION_ID}', intr.id)
                           .replaceAll('{COMMAND_NAME}', commandName)
@@ -168,13 +138,13 @@ export class CommandHandler implements EventHandler {
         }
     }
 
-    private async sendError(intr: CommandInteraction, data: EventData): Promise<void> {
+    private async sendError(intr: CommandInteraction): Promise<void> {
         try {
             await InteractionUtils.send(
                 intr,
-                Lang.getEmbed('errorEmbeds.command', data.lang, {
+                Lang.getEmbed('errorEmbeds.command', {
                     ERROR_CODE: intr.id,
-                    GUILD_ID: intr.guild?.id ?? Lang.getRef('other.na', data.lang),
+                    GUILD_ID: intr.guild?.id ?? Lang.getRef('other.na'),
                     SHARD_ID: (intr.guild?.shardId ?? 0).toString(),
                 })
             );

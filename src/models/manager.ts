@@ -5,7 +5,6 @@ import { JobService, Logger } from '../services/index.js';
 
 const require = createRequire(import.meta.url);
 let Config = require('../../config/config.json');
-let Debug = require('../../config/debug.json');
 let Logs = require('../../lang/logs.json');
 
 export class Manager {
@@ -20,11 +19,7 @@ export class Manager {
         let shardList = this.shardManager.shardList as number[];
 
         try {
-            Logger.info(
-                Logs.info.managerSpawningShards
-                    .replaceAll('{SHARD_COUNT}', shardList.length.toLocaleString())
-                    .replaceAll('{SHARD_LIST}', shardList.join(', '))
-            );
+            Logger.info(Logs.info.managerSpawningShards.replaceAll('{SHARD_COUNT}', shardList.length.toLocaleString()).replaceAll('{SHARD_LIST}', shardList.join(', ')));
             await this.shardManager.spawn({
                 amount: this.shardManager.totalShards,
                 delay: Config.sharding.spawnDelay * 1000,
@@ -33,10 +28,6 @@ export class Manager {
             Logger.info(Logs.info.managerAllShardsSpawned);
         } catch (error) {
             Logger.error(Logs.error.managerSpawningShards, error);
-            return;
-        }
-
-        if (Debug.dummyMode.enabled) {
             return;
         }
 

@@ -1,25 +1,19 @@
 {
     "data": {
         "displayEmbeds": {
-            "welcome": {
-                "title": "Thank you for using {{COM:bot.name}}!",
-                "description": ["{{REF:bot.description}}"],
+            "memberWelcome": {
+                "title": "Welcome {{MEMBER_NAME}}!",
+                "description": ["Hello and Welcome into the {{GUILD_NAME}}!", "Pull up a seat to the campfire {{EMOJI_CAMPFIRE}} and grab a marshmallow {{EMOJI_MARSHMALLOW}}!"],
                 "fields": [
                     {
-                        "name": "Important {{REF:fields.commands}}",
-                        "value": ["{{CMD_LINK_HELP}} - {{REF:commandDescs.help}}"]
-                    },
-                    {
-                        "name": "{{REF:fields.links}}",
-                        "value": ["{{REF:links.docsEmbed}}", "{{REF:links.supportEmbed}}"]
+                        "name": "Grab some important roles:",
+                        "value": ["{{ROLES_CHANNEL_LINK}}"]
                     }
                 ]
             },
             "helpContactSupport": {
                 "title": "Help - {{REF:helpOptions.contactSupport}}",
-                "description": [
-                    "Have a question or feedback? Join our support server at the link below!"
-                ],
+                "description": ["Have a question or feedback? Join our support server at the link below!"],
                 "fields": [
                     {
                         "name": "{{REF:fields.links}}",
@@ -92,19 +86,11 @@
                 "fields": [
                     {
                         "name": "Versions",
-                        "value": [
-                            "**Node.js**: {{NODE_VERSION}}",
-                            "**TypeScript**: {{TS_VERSION}}",
-                            "**ECMAScript**: {{ES_VERSION}}",
-                            "**discord.js**: {{DJS_VERSION}}"
-                        ]
+                        "value": ["**Node.js**: {{NODE_VERSION}}", "**TypeScript**: {{TS_VERSION}}", "**ECMAScript**: {{ES_VERSION}}", "**discord.js**: {{DJS_VERSION}}"]
                     },
                     {
                         "name": "Stats",
-                        "value": [
-                            "**Shards**: {{SHARD_COUNT}}",
-                            "**Servers**: {{SERVER_COUNT}} ({{SERVER_COUNT_PER_SHARD}}/Shard)"
-                        ]
+                        "value": ["**Shards**: {{SHARD_COUNT}}", "**Servers**: {{SERVER_COUNT}} ({{SERVER_COUNT_PER_SHARD}}/Shard)"]
                     },
                     {
                         "name": "Memory",
@@ -116,13 +102,7 @@
                     },
                     {
                         "name": "IDs",
-                        "value": [
-                            "**Hostname**: {{HOSTNAME}}",
-                            "**Shard ID**: {{SHARD_ID}}",
-                            "**Server ID**: {{SERVER_ID}}",
-                            "**Bot ID**: {{BOT_ID}}",
-                            "**User ID**: {{USER_ID}}"
-                        ]
+                        "value": ["**Hostname**: {{HOSTNAME}}", "**Shard ID**: {{SHARD_ID}}", "**Server ID**: {{SERVER_ID}}", "**Bot ID**: {{BOT_ID}}", "**User ID**: {{USER_ID}}"]
                     }
                 ]
             }
@@ -226,6 +206,8 @@
             "BanMembers": "Ban Members",
             "ChangeNickname": "Change Nickname",
             "Connect": "Connect",
+            "CreateEvents": "Create Events",
+            "CreateGuildExpressions": "Create Guild Expressions",
             "CreateInstantInvite": "Create Invite",
             "CreatePrivateThreads": "Create Private Threads",
             "CreatePublicThreads": "Create Public Threads",
@@ -251,6 +233,7 @@
             "RequestToSpeak": "Request to Speak",
             "SendMessages": "Send Messages / Create Posts",
             "SendMessagesInThreads": "Send Messages in Threads / Posts",
+            "SendPolls": "Send Polls",
             "SendTTSMessages": "Send Text-to-Speech Messages",
             "SendVoiceMessages": "Send Voice Messages",
             "Speak": "Speak",
